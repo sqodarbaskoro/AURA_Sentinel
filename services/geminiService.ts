@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { DisasterEvent, RiskAnalysisResult } from "../types";
 
@@ -21,19 +22,28 @@ export const geminiService = {
 
     try {
       const prompt = `
-        Analyze the following disaster event in Southeast Asia:
-        Event: ${event.title}
-        Type: ${event.type}
-        Country: ${event.country}
-        Description: ${event.description}
-        Severity: ${event.severity}
-        
+        Analyze the following disaster event in Southeast Asia, acting as a disaster risk specialist.
+        Critically evaluate the risk by cross-referencing with historical disaster data and geographical vulnerability for this specific region.
+
+        Event Details:
+        - Title: ${event.title}
+        - Type: ${event.type}
+        - Country: ${event.country}
+        - Coordinates: ${event.location.lat}, ${event.location.lng}
+        - Severity Level: ${event.severity}
+        - Description: ${event.description}
+
+        Analysis Requirements:
+        1. Contextualize this event against historical data for ${event.country} (e.g., is this a rare high-impact event or a common seasonal occurrence?).
+        2. Assess vulnerability based on the specific coordinates (population density, terrain, proximity to coast/fault lines).
+        3. Predict the spread/impact based on how similar historical events evolved in this area.
+
         Provide a JSON response with the following structure:
         {
-          "riskScore": (number 1-100),
-          "summary": (string, concise analysis of the situation),
-          "predictedImpact": (string, predictive modeling of spread or consequences over next 24-48 hours),
-          "recommendedActions": (array of strings, top 3 actions for local authorities)
+          "riskScore": (number 1-100, weighted by historical vulnerability),
+          "summary": (string, concise situation report including a reference to historical patterns),
+          "predictedImpact": (string, forecast of consequences over the next 24-48 hours),
+          "recommendedActions": (array of strings, top 3 specific actions for local authorities)
         }
       `;
 
