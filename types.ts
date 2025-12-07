@@ -58,10 +58,32 @@ export interface RiskAnalysisResult {
   recommendedActions: string[];
 }
 
-export interface AlertConfig {
+export interface UserPreferences {
+  notificationsEnabled: boolean;
   email: string;
-  enabled: boolean;
+  emailVerified: boolean;
   minSeverity: SeverityLevel;
   subscribedTypes: DisasterType[];
-  watchZones: AlertZone[]; // New field for custom zones
+  watchZones: AlertZone[];
 }
+
+export interface PendingUpdate {
+  newEmail?: string;
+  newPasswordHash?: string;
+  verificationToken: string;
+  requestedAt: string;
+}
+
+export type UserRole = 'ADMIN' | 'USER';
+
+export interface User {
+  id: string;
+  username: string;
+  role: UserRole;
+  preferences: UserPreferences;
+  pendingUpdate?: PendingUpdate;
+  createdAt: string;
+}
+
+// Keeping AlertConfig for backward compatibility if needed, but primarily using UserPreferences now
+export interface AlertConfig extends UserPreferences {}
